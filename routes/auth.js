@@ -85,22 +85,18 @@ router.post(
     UsersModel.findOne({ email: data.email })
       .then((user) => {
         if (!user) {
-          return res
-            .status(400)
-            .json({
-              status: 400,
-              statusText: "Email or Password is incorrect",
-            });
+          return res.status(400).json({
+            status: 400,
+            statusText: "Email or Password is incorrect",
+          });
         }
 
         const isIdentical = bcrypt.compareSync(data.password, user.password);
         if (!isIdentical) {
-          return res
-            .status(400)
-            .json({
-              status: 400,
-              statusText: "Email or Password is incorrect",
-            });
+          return res.status(400).json({
+            status: 400,
+            statusText: "Email or Password is incorrect",
+          });
         }
 
         const payload = {
@@ -122,16 +118,17 @@ router.post(
 );
 
 router.post("/get-user", fetchUser, (req, res) => {
-    UsersModel.findById(req.user.id).select("-password")
+  UsersModel.findById(req.user.id)
+    .select("-password")
     .then((user) => {
-      res.json({ status: 200, statusText: user })
-    })
-})
+      res.json({ status: 200, statusText: user });
+    });
+});
 
 router.use((req, res) => {
   res
-    .status(400)
-    .json({ status: 400, statusText: `cannot ${req.method} ${req.url}` });
+    .status(404)
+    .json({ status: 404, statusText: `Cannot ${req.method} ${req.url}` });
 });
 
 module.exports = router;
