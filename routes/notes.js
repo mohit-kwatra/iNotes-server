@@ -9,10 +9,13 @@ router.post(
   "/add",
   fetchUser,
   [
-    body("title", "Note's title must be atleast 3 characters")
-      .isLength({ min: 3 }),
-    body("description", "Note's description must be atleast 5 characters")
-      .isLength({ min: 5 }),
+    body("title", "Note's title must be atleast 3 characters").isLength({
+      min: 3,
+    }),
+    body(
+      "description",
+      "Note's description must be atleast 5 characters"
+    ).isLength({ min: 5 }),
   ],
   (req, res) => {
     const errors = validationResult(req);
