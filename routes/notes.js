@@ -2,6 +2,7 @@ const express = require("express");
 const { body, validationResult, matchedData } = require("express-validator");
 const fetchUser = require("../middlewares/fetchUser");
 const NotesModel = require("../database/models/Note");
+
 const router = express.Router();
 
 router.post(
@@ -9,11 +10,9 @@ router.post(
   fetchUser,
   [
     body("title", "Note's title must be atleast 3 characters")
-      .isLength({ min: 3 })
-      .escape(),
+      .isLength({ min: 3 }),
     body("description", "Note's description must be atleast 5 characters")
-      .isLength({ min: 5 })
-      .escape(),
+      .isLength({ min: 5 }),
   ],
   (req, res) => {
     const errors = validationResult(req);
@@ -30,7 +29,7 @@ router.post(
     };
     NotesModel.create(data)
       .then((note) => {
-        res.json({ status: 200, statusText: "SUCCESS" });
+        res.json({ status: 200, statusText: "SUCCESS", note });
       })
       .catch((error) => {
         console.log(error);
@@ -47,7 +46,7 @@ router.put("/update/:id", fetchUser, (req, res) => {
 
   if (title.trim()) newNote.title = title;
   if (description.trim()) newNote.description = description;
-  if (tag.trim()) newNote.tag = tag;
+  if (tag?.trim()) newNote.tag = tag;
 
   NotesModel.findById(req.params.id)
     .then((note) => {
